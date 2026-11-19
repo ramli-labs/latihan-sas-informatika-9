@@ -186,8 +186,9 @@ function viewPetunjuk(m){
   $('#bKembali').onclick=()=>viewLogin();
   $('#bMulai').onclick=async()=>{ const b=$('#bMulai'); b.disabled=true; b.innerHTML='<span class="spin"></span> Menyiapkan…';
     try{ await masukLayarPenuh(); }catch(e){ b.disabled=false; b.textContent='Mulai ujian (layar penuh)'; $('#pMsg').innerHTML='<div class="msg no">Layar penuh gagal diaktifkan. Gunakan Chrome di laptop, lalu tekan tombol lagi.</div>'; return; }
-    const r=await post({aksi:'mulai',kelas:m.kelas,absen:m.absen});
-    if(!r.ok){ await keluarLayarPenuh(); b.disabled=false; b.textContent='Mulai ujian (layar penuh)'; $('#pMsg').innerHTML=`<div class="msg no">${esc(r.pesan||'Tidak bisa terhubung ke server. Coba lagi.')}</div>`; return; }
+    const aidBaru=(crypto.randomUUID?crypto.randomUUID().replace(/-/g,''):Math.random().toString(36).slice(2)+Date.now().toString(36)).slice(0,24);
+    const r={aid:aidBaru,nama:m.nama,ke:''};
+    post({aksi:'mulai',aid:aidBaru,kelas:m.kelas,absen:m.absen,mulai:Date.now()},3);
     const urut=[...acak(SOAL.filter(q=>q.tipe==='pg')),...acak(SOAL.filter(q=>q.tipe==='aon')),...acak(SOAL.filter(q=>q.tipe==='mtf'))].map(q=>SOAL.indexOf(q));
     const opsi={}; SOAL.forEach(q=>{ const idx=q.o.map((_,i)=>i); opsi[q.id]=(q.urut?idx:acak(idx)); });
     const now=Date.now();
@@ -250,11 +251,12 @@ function konfirmasi(){
 async function kirim(alasan){
   if(selesai||layar==='kirim')return; layar='kirim'; pantau=false; hapusJeda(); header();
   $('#app').innerHTML='<div class="card narrow" style="text-align:center"><h2><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Mengirim jawaban…</h2></div>';
-  const body={aksi:'kirim',aid:S.aid,jawab:S.jawab,alasan,pelanggaran:S.pelanggaran,lamaKeluar:S.lamaKeluar,detik:Math.round((Math.min(Date.now(),S.batas)-S.mulai)/1000)};
+  const body={aksi:'kirim',aid:S.aid,kelas:S.kelas,absen:S.absen,mulai:S.mulai,jawab:S.jawab,alasan,pelanggaran:S.pelanggaran,lamaKeluar:S.lamaKeluar,detik:Math.round((Math.min(Date.now(),S.batas)-S.mulai)/1000)};
   let r=await post(body,3);
-  while(r.jaringan){
+  let ulang=0;
+  while(r.jaringan||(!r.ok&&r.coba&&ulang<20)){ ulang++;
     $('#app').innerHTML='<div class="card narrow"><h2>Menunggu koneksi…</h2><p>Jawabanmu aman tersimpan di perangkat ini dan akan dikirim otomatis saat internet kembali. Jangan tutup halaman ini.</p></div>';
-    await new Promise(x=>setTimeout(x,5000)); r=await post(body,0);
+    await new Promise(x=>setTimeout(x,3000+Math.random()*4000)); r=await post(body,0);
   }
   selesai=true; await keluarLayarPenuh();
   if(!r.ok){ $('#app').innerHTML=`<div class="card narrow"><h2>Gagal mengirim</h2><p>${esc(r.pesan||'')}</p></div>`; return; }
@@ -347,7 +349,7 @@ async function langgar(jenis,saatJeda){
   const t=Date.now(); if(t-terakhir<2500)return; terakhir=t;
   if(jeda) jenis+=' (saat ujian dijeda)'; else { jeda=true; keluarAt=t; }
   S.pelanggaran+=1; simpanLokal(); header();
-  post({aksi:'langgar',aid:S.aid,jenis,ke:S.pelanggaran},2);
+  post({aksi:'langgar',aid:S.aid,kelas:S.kelas,absen:S.absen,nama:S.nama,jenis,ke:S.pelanggaran},2);
   if(S.pelanggaran>=MAKS_LANGGAR){ hapusJeda(); return kirim(`Pelanggaran ke-${MAKS_LANGGAR}`); }
   tampilJeda(`<h2 style="color:var(--no)">Pelanggaran ${S.pelanggaran}/${MAKS_LANGGAR}</h2><p><b>${esc(jenis)}</b></p>
    <p>Soal ditutup sementara dan <b>waktu tetap berjalan</b>. Selama layar ini tampil, pindah tab atau aplikasi juga dihitung pelanggaran.</p>
