@@ -120,7 +120,7 @@ function acak(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Ma
 
 async function post(body,retry=2){
   for(let i=0;i<=retry;i++){
-    try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}); if(!r.ok)throw 0; return await r.json();}
+    try{const ac=new AbortController(), tm=setTimeout(()=>ac.abort(),body.aksi==='kirim'?40000:20000); const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),signal:ac.signal}); clearTimeout(tm); if(!r.ok)throw 0; return await r.json();}
     catch(e){ if(i===retry) return {ok:false,jaringan:true}; await new Promise(r=>setTimeout(r,1200*(i+1))); }
   }
 }
@@ -260,7 +260,7 @@ function konfirmasi(){
 }
 async function kirim(alasan){
   if(selesai||layar==='kirim')return; layar='kirim'; pantau=false; hapusJeda(); header();
-  $('#app').innerHTML='<div class="card narrow" style="text-align:center"><h2><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Mengirim jawaban…</h2></div>';
+  $('#app').innerHTML='<div class="card narrow" style="text-align:center"><h2><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Mengirim jawaban…</h2><p class="sm mut">Jangan tutup halaman ini. Jika lebih dari 1 menit, jawabanmu tetap aman dan akan dikirim ulang otomatis.</p></div>';
   const body={aksi:'kirim',aid:S.aid,kelas:S.kelas,absen:S.absen,mulai:S.mulai,jawab:S.jawab,alasan,pelanggaran:S.pelanggaran,lamaKeluar:S.lamaKeluar,detik:Math.round((Math.min(Date.now(),S.batas)-S.mulai)/1000)};
   let r=await post(body,3);
   let ulang=0;
@@ -390,11 +390,17 @@ window.addEventListener('beforeunload',e=>{ if(S&&layar==='ujian'&&!selesai){ e.
 /* ---------- MULAI ---------- */
 if(API.startsWith('__')){ $('#app').innerHTML='<div class="card narrow"><h2>Alamat server belum diatur</h2></div>'; return; }
 if(S&&S.aid){
+  $('#app').innerHTML='<div class="card narrow" style="text-align:center"><h2><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Memeriksa sesi…</h2></div>';
+  (async()=>{ let c=null; try{ const ac=new AbortController(); setTimeout(()=>ac.abort(),20000); c=await fetch(API+(API.includes('?')?'&':'?')+'aksi=cek&aid='+encodeURIComponent(S.aid),{signal:ac.signal}).then(x=>x.json()); }catch(e){}
+  if(c&&c.ok&&c.selesai){ selesai=true; const s0=S; LS.del('sesi'); viewHasil(c,c.status||'Selesai',s0); S=null; header(); return; }
+  tampilLanjut(); })();
+} else viewLogin();
+function tampilLanjut(){
   layar='lanjut'; header();
   $('#app').innerHTML=`<div class="card narrow" style="text-align:center"><h2>Lanjutkan ujian</h2><p>${esc(S.nama)} · ${esc(S.kelas)}</p><p class="sm mut">Halaman sempat ditutup atau dimuat ulang. Waktu tetap berjalan.</p><button class="btn pri big" id="bLanjutkan">Lanjutkan (layar penuh)</button><div id="lzMsg"></div></div>`;
   $('#bLanjutkan').onclick=async()=>{ try{ await masukLayarPenuh(); }catch(e){ $('#lzMsg').innerHTML='<div class="msg no">Layar penuh gagal diaktifkan. Tekan tombol lagi.</div>'; return; }
     if(Date.now()>=S.batas) return kirim('Waktu habis'); viewUjian(); terakhir=0; langgar('Memuat ulang / menutup halaman'); };
-} else viewLogin();
+}
 })();
 </script>
 </body>
