@@ -31,6 +31,7 @@ h2{margin:0 0 10px}
 .btn.big{padding:12px 22px;font-size:17px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 label.f{display:block;font-weight:600;margin:12px 0 4px}
+input.f{width:100%;padding:10px;border:1px solid #b6c0d4;border-radius:10px;background:#fff;font:inherit;letter-spacing:4px;text-transform:uppercase;-webkit-user-select:text;user-select:text}
 select.f{width:100%;padding:10px;border:1px solid #b6c0d4;border-radius:10px;background:#fff}
 .msg{padding:10px 14px;border-radius:10px;margin-top:12px;font-size:15px}
 .msg.no{background:var(--no2);color:#8e2a20}.msg.ok{background:var(--ok2);color:#135c33}.msg.info{background:var(--warn2);color:#7a5212}
@@ -123,7 +124,7 @@ async function post(body,retry=2){
     catch(e){ if(i===retry) return {ok:false,jaringan:true}; await new Promise(r=>setTimeout(r,1200*(i+1))); }
   }
 }
-async function getMurid(kelas){ const r=await fetch(API+(API.includes('?')?'&':'?')+'aksi=murid&kelas='+encodeURIComponent(kelas)); return r.json(); }
+async function getMurid(kelas,kode){ const r=await fetch(API+(API.includes('?')?'&':'?')+'aksi=murid&kelas='+encodeURIComponent(kelas)+'&kode='+encodeURIComponent(kode)); return r.json(); }
 
 /* ---------- diagram ---------- */
 function svgDiagram(g){
@@ -157,18 +158,27 @@ function viewLogin(pesan){
   layar='login'; pantau=false; header();
   $('#app').innerHTML=`<div class="card narrow"><h2>Latihan SAS 1 Informatika</h2><p class="mut sm" style="margin-top:-4px">Kelas IX · Pseudocode &amp; Flowchart · Jejak Digital · 50 soal · ${DURASI_MENIT} menit</p>
   <label class="f">Kelas</label><select class="f" id="lKelas"><option value="">— pilih kelas —</option>${KELAS.map(k=>`<option>${k}</option>`).join('')}</select>
-  <label class="f">Nama</label><select class="f" id="lNama" disabled><option value="">— pilih kelas dulu —</option></select>
+  <label class="f">Kode kelas</label><input class="f" id="lKode" maxlength="4" autocomplete="off" spellcheck="false" placeholder="4 karakter dari guru">
+  <label class="f">Nama</label><select class="f" id="lNama" disabled><option value="">— isi kelas &amp; kode dulu —</option></select>
   <button class="btn pri big" id="lMasuk" style="width:100%;margin-top:16px">Mulai latihan</button>
   <button class="btn" id="lRiwayat" style="width:100%;margin-top:8px">📄 Lihat hasil &amp; pembahasan sebelumnya</button>
   <div id="lMsg">${pesan?`<div class="msg info">${esc(pesan)}</div>`:''}</div></div>`;
   const kel=$('#lKelas'), nm=$('#lNama'), msg=$('#lMsg');
-  kel.onchange=async()=>{ nm.disabled=true; nm.innerHTML='<option>Memuat…</option>'; if(!kel.value){nm.innerHTML='<option value="">— pilih kelas dulu —</option>';return;}
-    try{ const r=await getMurid(kel.value); if(!r.ok)throw 0; nm.innerHTML='<option value="">— pilih nama —</option>'+r.data.map(m=>`<option value="${m.absen}">${m.absen}. ${esc(m.nama)}</option>`).join(''); nm.disabled=false; }
-    catch(e){ nm.innerHTML='<option value="">Gagal memuat</option>'; msg.innerHTML='<div class="msg no">Tidak bisa terhubung ke server. Periksa internet lalu pilih kelas lagi.</div>'; } };
+  const kd=$('#lKode'); let muatKe=0;
+  const muat=async()=>{ msg.innerHTML=''; nm.disabled=true; const kode=kd.value.trim().toUpperCase();
+    if(!kel.value||kode.length<4){ nm.innerHTML='<option value="">— isi kelas &amp; kode dulu —</option>'; return; }
+    nm.innerHTML='<option>Memuat…</option>'; const ini=++muatKe;
+    try{ const r=await getMurid(kel.value,kode); if(ini!==muatKe)return;
+      if(!r.ok){ nm.innerHTML='<option value="">— kode belum benar —</option>'; msg.innerHTML=`<div class="msg no">${esc(r.pesan||'Gagal memuat daftar nama.')}</div>`; return; }
+      LS.set('kode_'+kel.value,kode);
+      nm.innerHTML='<option value="">— pilih nama —</option>'+r.data.map(m=>`<option value="${m.absen}">${m.absen}. ${esc(m.nama)}</option>`).join(''); nm.disabled=false; }
+    catch(e){ if(ini!==muatKe)return; nm.innerHTML='<option value="">Gagal memuat</option>'; msg.innerHTML='<div class="msg no">Tidak bisa terhubung ke server. Periksa internet lalu coba lagi.</div>'; } };
+  kel.onchange=()=>{ kd.value=LS.get('kode_'+kel.value,''); muat(); };
+  kd.oninput=()=>{ kd.value=kd.value.toUpperCase().replace(/[^A-Z0-9]/g,''); muat(); };
   $('#lMasuk').onclick=()=>{ if(!kel.value||!nm.value){ msg.innerHTML='<div class="msg no">Pilih kelas dan nama dulu.</div>'; return; }
-    viewPetunjuk({kelas:kel.value,absen:+nm.value,nama:nm.options[nm.selectedIndex].text.replace(/^\d+\.\s*/,'')}); };
+    viewPetunjuk({kelas:kel.value,absen:+nm.value,nama:nm.options[nm.selectedIndex].text.replace(/^\d+\.\s*/,''),kode:kd.value}); };
   $('#lRiwayat').onclick=()=>{ if(!kel.value||!nm.value){ msg.innerHTML='<div class="msg no">Pilih kelas dan nama dulu.</div>'; return; }
-    viewRiwayat({kelas:kel.value,absen:+nm.value,nama:nm.options[nm.selectedIndex].text.replace(/^\d+\.\s*/,'')}); };
+    viewRiwayat({kelas:kel.value,absen:+nm.value,nama:nm.options[nm.selectedIndex].text.replace(/^\d+\.\s*/,''),kode:kd.value}); };
 }
 
 function viewPetunjuk(m){
@@ -180,7 +190,7 @@ function viewPetunjuk(m){
    <li>Ujian berjalan dalam <b>layar penuh</b>. Menekan <b>Esc</b>, pindah tab/aplikasi, klik kanan, menyalin/menempel, atau membuka Developer Tools dihitung <b>pelanggaran</b>.</li>
    <li>Setiap pelanggaran membuat soal tertutup sementara, sedangkan <b>waktu tetap berjalan</b>. Pada <b>pelanggaran ke-${MAKS_LANGGAR}</b>, jawaban terkirim otomatis dan ujian selesai.</li>
    <li>Jawaban tersimpan otomatis di perangkat ini. Tandai <b>Ragu-ragu</b> untuk soal yang ingin diperiksa lagi.</li>
-   <li>Setelah selesai, kamu akan melihat nilai, umpan balik per materi, dan pembahasan setiap soal.</li>
+   <li>Setelah selesai, kamu langsung melihat nilai dan umpan balik per materi. Kunci dan pembahasan per soal dibuka guru setelah semua kelas selesai.</li>
   </ul>
   <div class="row" style="justify-content:space-between;margin-top:14px"><button class="btn" id="bKembali">← Ganti nama</button><button class="btn pri big" id="bMulai">Mulai ujian (layar penuh)</button></div><div id="pMsg"></div></div>`;
   $('#bKembali').onclick=()=>viewLogin();
@@ -188,11 +198,11 @@ function viewPetunjuk(m){
     try{ await masukLayarPenuh(); }catch(e){ b.disabled=false; b.textContent='Mulai ujian (layar penuh)'; $('#pMsg').innerHTML='<div class="msg no">Layar penuh gagal diaktifkan. Gunakan Chrome di laptop, lalu tekan tombol lagi.</div>'; return; }
     const aidBaru=(crypto.randomUUID?crypto.randomUUID().replace(/-/g,''):Math.random().toString(36).slice(2)+Date.now().toString(36)).slice(0,24);
     const r={aid:aidBaru,nama:m.nama,ke:''};
-    post({aksi:'mulai',aid:aidBaru,kelas:m.kelas,absen:m.absen,mulai:Date.now()},3);
+    post({aksi:'mulai',aid:aidBaru,kelas:m.kelas,absen:m.absen,kode:m.kode,mulai:Date.now()},3);
     const urut=[...acak(SOAL.filter(q=>q.tipe==='pg')),...acak(SOAL.filter(q=>q.tipe==='aon')),...acak(SOAL.filter(q=>q.tipe==='mtf'))].map(q=>SOAL.indexOf(q));
     const opsi={}; SOAL.forEach(q=>{ const idx=q.o.map((_,i)=>i); opsi[q.id]=(q.urut?idx:acak(idx)); });
     const now=Date.now();
-    S={aid:r.aid,kelas:m.kelas,absen:m.absen,nama:r.nama||m.nama,ke:r.ke,mulai:now,batas:now+DURASI_MENIT*60000,urut,opsi,jawab:{},ragu:{},pelanggaran:0,lamaKeluar:0,cur:0};
+    S={aid:r.aid,kode:m.kode,kelas:m.kelas,absen:m.absen,nama:r.nama||m.nama,ke:r.ke,mulai:now,batas:now+DURASI_MENIT*60000,urut,opsi,jawab:{},ragu:{},pelanggaran:0,lamaKeluar:0,cur:0};
     simpanLokal(); viewUjian(); };
 }
 
@@ -288,7 +298,8 @@ function viewHasil(r,alasan,s){
    ${umpanBalik(r)}
    <div class="row noprint" style="margin-top:14px"><button class="btn pri" id="bUlang">Kerjakan lagi (soal diacak)</button><button class="btn" id="bPdf">🖨️ Simpan sebagai PDF</button><button class="btn" id="bRiw">📄 Hasil lainnya</button></div></div>
    <div class="card mid"><h2>Pembahasan</h2>`;
-  s.urut.forEach((si,n)=>{ const q0=SOAL[si], q=((r.versiLama||[]).includes(q0.id)&&SOAL_LAMA[q0.id])||q0, d=r.detail[q.id], a=s.jawab[q.id], perm=s.opsi[q.id];
+  if(!r.detail) h+='<div class="msg info">🔒 Kunci jawaban dan pembahasan per soal akan dibuka guru setelah semua kelas selesai mengerjakan. Nanti lihat lewat tombol <b>Lihat hasil &amp; pembahasan sebelumnya</b>. Sementara itu, pelajari dulu materi yang masih merah di atas.</div>';
+  else s.urut.forEach((si,n)=>{ const q0=SOAL[si], q=((r.versiLama||[]).includes(q0.id)&&SOAL_LAMA[q0.id])||q0, d=r.detail[q.id], a=s.jawab[q.id], perm=s.opsi[q.id];
     let o='';
     if(q.tipe==='pg') o=perm.map((oi,j)=>`<div class="o ${oi===d.k?'k':(oi===a?'x':'')}">${'ABCD'[j]}. ${fmt(q.o[oi])}${oi===a?' <b>← jawabanmu</b>':''}</div>`).join('');
     else if(q.tipe==='aon'){ const pil=new Set(a||[]), kk=new Set(d.k); o=perm.map(oi=>`<div class="o ${kk.has(oi)?'k':(pil.has(oi)?'x':'')}">${kk.has(oi)?'✔':'✘'} ${fmt(q.o[oi])}${pil.has(oi)?' <b>← kamu pilih</b>':''}</div>`).join(''); }
@@ -297,9 +308,9 @@ function viewHasil(r,alasan,s){
   });
   h+='</div>';
   $('#app').innerHTML=h; window.scrollTo(0,0);
-  $('#bUlang').onclick=()=>{ selesai=false; viewPetunjuk({kelas:s.kelas,absen:s.absen,nama:s.nama}); };
+  $('#bUlang').onclick=()=>{ selesai=false; viewPetunjuk({kelas:s.kelas,absen:s.absen,nama:s.nama,kode:s.kode}); };
   $('#bPdf').onclick=()=>{ const t=document.title; document.title=`Hasil Latihan SAS - ${s.nama} - ${s.kelas} - percobaan ${r.ke}`; window.print(); setTimeout(()=>document.title=t,1000); };
-  $('#bRiw').onclick=()=>{ selesai=false; viewRiwayat({kelas:s.kelas,absen:s.absen,nama:s.nama}); };
+  $('#bRiw').onclick=()=>{ selesai=false; viewRiwayat({kelas:s.kelas,absen:s.absen,nama:s.nama,kode:s.kode}); };
 }
 
 const tgl=x=>{ try{ return new Date(x).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return x; } };
@@ -308,16 +319,16 @@ async function viewRiwayat(m){
   $('#app').innerHTML=`<div class="card mid"><h2>Hasil sebelumnya</h2><p class="mut" style="margin-top:-6px">${esc(m.nama)} · ${esc(m.kelas)}</p><div id="rList"><p><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Memuat…</p></div>
    <div class="row" style="margin-top:14px"><button class="btn" id="rBack">← Kembali</button><button class="btn pri" id="rMulai">Mulai latihan baru</button></div></div>`;
   $('#rBack').onclick=()=>viewLogin(); $('#rMulai').onclick=()=>viewPetunjuk(m);
-  let r; try{ r=await fetch(API+(API.includes('?')?'&':'?')+'aksi=riwayat&kelas='+encodeURIComponent(m.kelas)+'&absen='+m.absen).then(x=>x.json()); }catch(e){ r={ok:false}; }
-  if(!r.ok){ $('#rList').innerHTML='<div class="msg no">Tidak bisa terhubung ke server. Coba lagi.</div>'; return; }
+  let r; try{ r=await fetch(API+(API.includes('?')?'&':'?')+'aksi=riwayat&kelas='+encodeURIComponent(m.kelas)+'&absen='+m.absen+'&kode='+encodeURIComponent(m.kode||'')).then(x=>x.json()); }catch(e){ r={ok:false}; }
+  if(!r.ok){ $('#rList').innerHTML=`<div class="msg no">${esc(r.pesan||'Tidak bisa terhubung ke server. Coba lagi.')}</div>`; return; }
   if(!r.data.length){ $('#rList').innerHTML='<p class="mut">Belum ada latihan yang selesai dikerjakan.</p>'; return; }
   $('#rList').innerHTML='<table class="tf"><tr><th>Percobaan</th><th>Selesai</th><th>Nilai</th><th></th></tr>'+r.data.map(x=>`<tr><td>Ke-${x.ke}${x.status!=='Selesai'?`<div class="sm" style="color:var(--no)">${esc(x.status)}</div>`:''}</td><td class="sm">${esc(tgl(x.selesai))}</td><td><b style="font-size:20px">${x.nilai}</b></td><td class="c"><button class="btn" data-aid="${esc(x.aid)}">Buka</button></td></tr>`).join('')+'</table>';
   $$('#rList [data-aid]').forEach(b=>b.onclick=async()=>{ b.disabled=true; b.innerHTML='<span class="spin" style="border-color:#8886;border-top-color:#333"></span>';
-    let h; try{ h=await fetch(API+(API.includes('?')?'&':'?')+'aksi=hasil&aid='+encodeURIComponent(b.dataset.aid)).then(x=>x.json()); }catch(e){ h={ok:false}; }
-    if(!h.ok){ b.disabled=false; b.textContent='Buka'; return; }
+    let h; try{ h=await fetch(API+(API.includes('?')?'&':'?')+'aksi=hasil&aid='+encodeURIComponent(b.dataset.aid)+'&kode='+encodeURIComponent(m.kode||'')).then(x=>x.json()); }catch(e){ h={ok:false}; }
+    if(!h.ok){ b.disabled=false; b.textContent='Buka'; if(h.pesan) $('#rList').insertAdjacentHTML('afterbegin',`<div class="msg no">${esc(h.pesan)}</div>`); return; }
     const urut=[...SOAL.filter(q=>q.tipe==='pg'),...SOAL.filter(q=>q.tipe==='aon'),...SOAL.filter(q=>q.tipe==='mtf')].map(q=>SOAL.indexOf(q));
     const opsi={}; SOAL.forEach(q=>opsi[q.id]=q.o.map((_,i)=>i));
-    viewHasil(h,h.status,{nama:m.nama,kelas:m.kelas,absen:m.absen,urut,opsi,jawab:h.jawab||{},pelanggaran:h.pelanggaran}); });
+    viewHasil(h,h.status,{nama:m.nama,kelas:m.kelas,absen:m.absen,kode:m.kode,urut,opsi,jawab:h.jawab||{},pelanggaran:h.pelanggaran}); });
 }
 
 /* ---------- TIMER ---------- */
