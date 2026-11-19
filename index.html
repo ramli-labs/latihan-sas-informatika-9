@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan SAS 1 Informatika Kelas IX</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#1d2433;--mute:#5b6476;--line:#dfe4ee;--pri:#1f5bd8;--pri2:#e8effd;--ok:#1a8a4a;--ok2:#e3f5ea;--no:#c0392b;--no2:#fbe7e4;--warn:#b7791f;--warn2:#fdf3e1}
+*{box-sizing:border-box}
+html,body{margin:0;-webkit-user-select:none;user-select:none}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:16px}
+button,select{font:inherit}
+button{cursor:pointer}
+#top{position:sticky;top:0;z-index:30;height:52px;background:#14233c;color:#fff;display:flex;align-items:center;gap:12px;padding:0 16px}
+#top b{font-size:15px}
+#top .sp{flex:1}
+.pill{padding:4px 10px;border-radius:999px;background:#ffffff1f;font-size:14px;font-weight:600;white-space:nowrap}
+.pill.warn{background:#f59f00;color:#111}.pill.bad{background:#e03131}
+main{max-width:1180px;margin:0 auto;padding:18px 16px 50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.narrow{max-width:480px;margin:30px auto}
+.mid{max-width:760px;margin:20px auto}
+h1,h2,h3{line-height:1.3}
+h2{margin:0 0 10px}
+.mut{color:var(--mute)}.sm{font-size:14px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;border-radius:10px;font-weight:600}
+.btn:hover{border-color:#b6c0d4}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.big{padding:12px 22px;font-size:17px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+label.f{display:block;font-weight:600;margin:12px 0 4px}
+select.f{width:100%;padding:10px;border:1px solid #b6c0d4;border-radius:10px;background:#fff}
+.msg{padding:10px 14px;border-radius:10px;margin-top:12px;font-size:15px}
+.msg.no{background:var(--no2);color:#8e2a20}.msg.ok{background:var(--ok2);color:#135c33}.msg.info{background:var(--warn2);color:#7a5212}
+ul.rules{padding-left:20px}ul.rules li{margin:4px 0}
+/* ujian */
+#uj{display:grid;grid-template-columns:250px 1fr;gap:14px;align-items:start}
+.nav{position:sticky;top:66px}
+.navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.navgrid button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:5px 0;font-size:13px;font-weight:700;position:relative}
+.navgrid button.isi{background:#d3f9d8;border-color:#69db7c}
+.navgrid button.ragu{background:#fff3bf;border-color:#fcc419}
+.navgrid button.cur{outline:2px solid var(--pri);outline-offset:1px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--mute);margin:10px 0}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px;border:1px solid #aaa}
+.sec{font-size:12px;font-weight:700;color:var(--mute);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.4px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.tag{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--pri2);color:var(--pri)}
+.tag.aon{background:#efe7fd;color:#6d28d9}.tag.mtf{background:#e3f5ea;color:#1a8a4a}
+.stem{font-size:17px;margin:4px 0 12px;white-space:pre-line}
+.ins{font-size:14px;color:var(--mute);margin-bottom:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;margin:7px 0;font-size:16px}
+.opt:hover{border-color:#b6c0d4}
+.opt .k{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid #aab4c8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.opt.aon .k{border-radius:6px}
+.opt.sel{border-color:var(--pri);background:var(--pri2)}
+.opt.sel .k{background:var(--pri);border-color:var(--pri);color:#fff}
+table.tf{border-collapse:collapse;width:100%;font-size:16px}
+table.tf th,table.tf td{border:1px solid var(--line);padding:8px 10px;vertical-align:middle}
+table.tf th{background:#f6f8fb;font-size:14px}
+table.tf td.c{width:82px;text-align:center}
+.tfb{border:1.5px solid #aab4c8;background:#fff;border-radius:8px;padding:4px 12px;font-weight:700}
+.tfb.sel{background:var(--pri);border-color:var(--pri);color:#fff}
+.fig{margin:6px 0 12px;text-align:center}
+code{font-family:ui-monospace,Consolas,'Courier New',monospace;background:#eef1f7;border-radius:5px;padding:1px 6px;font-size:.92em;white-space:pre-wrap}
+pre.kode{font-family:ui-monospace,Consolas,'Courier New',monospace;background:#14233c;color:#e9eef8;border-radius:10px;padding:12px 16px;margin:4px 0 14px;font-size:15px;line-height:1.5;overflow-x:auto;white-space:pre;text-align:left}
+.opt.sel code{background:#d6e2fb}
+.fb{border-radius:12px;padding:12px 16px;margin:14px 0;font-size:15px}
+.fb.hi{background:var(--ok2);color:#135c33}.fb.mid{background:var(--warn2);color:#7a5212}.fb.lo{background:var(--no2);color:#8e2a20}
+.saran{margin:10px 0 0;padding:0;list-style:none}.saran li{background:#fff;border:1px solid var(--line);border-left:4px solid var(--no);border-radius:8px;padding:8px 12px;margin:6px 0;font-size:14.5px;color:var(--ink)}
+.bars .t i.lo{background:var(--no)}.bars .t i.ok{background:var(--ok)}
+.fig svg{max-width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:10px}
+.qfoot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.btn.ragu.on{background:#fcc419;border-color:#fcc419}
+.modal{position:fixed;inset:0;z-index:50;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .card{max-width:520px;width:100%}
+/* hasil */
+.big{font-size:52px;font-weight:800;line-height:1}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.stat div{background:var(--bg);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:22px}
+.rv{border-top:1px solid var(--line);padding:14px 0}
+.rv .o{padding:6px 10px;border-radius:8px;margin:4px 0;border:1px solid var(--line)}
+.rv .o.k{background:var(--ok2);border-color:#8ce99a}
+.rv .o.x{background:var(--no2);border-color:#ffa8a8}
+.rv .why{background:#f6f8fb;border-left:4px solid var(--pri);padding:8px 12px;border-radius:6px;margin-top:8px;font-size:15px}
+.bars .b{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:14px}
+.bars .b span:first-child{width:190px}
+.bars .t{flex:1;height:14px;background:var(--bg);border-radius:8px;overflow:hidden}
+.bars .t i{display:block;height:100%;background:var(--pri)}
+.spin{display:inline-block;width:18px;height:18px;border:3px solid #fff6;border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media print{#top,.noprint,.btn{display:none!important}body{background:#fff;font-size:12pt}main{padding:0;max-width:none}.card{border:0;padding:0;margin:0 0 12px!important;max-width:none!important}.rv{break-inside:avoid;page-break-inside:avoid}.fig svg{max-width:60%}}
+@media (max-width:820px){#uj{grid-template-columns:1fr}.nav{position:static}.navgrid{grid-template-columns:repeat(10,1fr)}}
+</style>
+</head>
+<body>
+<div id="top"><b>Latihan SAS 1 Informatika IX</b><span class="sp"></span><span id="hInfo" class="sm"></span><span id="hTimer" class="pill" style="display:none"></span><span id="hLanggar" class="pill" style="display:none"></span></div>
+<main id="app"></main>
+<script>
+(function(){
+'use strict';
+const API=(new URLSearchParams(location.search).get('api'))||"https://script.google.com/macros/s/AKfycbw-lK8mZaa7X_hwfiIhT-q-PmGbBhGYo1OgHVlGYlRllyD6hFuu-duxgG_7hC-CPdIXjA/exec";
+const DURASI_MENIT=90, MAKS_LANGGAR=5;
+const SOAL=[{"tipe": "pg", "bab": "Pengantar Pseudocode", "s": "Pengertian pseudocode yang paling tepat adalah ...", "o": ["Bahasa pemrograman yang perintahnya bisa langsung dijalankan komputer", "Gambar alur algoritma berupa simbol standar yang dihubungkan anak panah", "Cara informal menuliskan algoritma dengan campuran bahasa alami dan kode", "Kumpulan kode mesin berbentuk angka biner yang dibaca oleh prosesor"], "id": "pg01"}, {"tipe": "pg", "bab": "Variabel & Ekspresi", "s": "Dalam notasi pseudocode modul, baris `total ← 0` dibaca ...", "o": ["Total diisi dengan 0", "Apakah total sama dengan 0?", "Total dikurangi 0", "Total lebih kecil dari 0"], "id": "pg02"}, {"tipe": "pg", "bab": "Variabel & Ekspresi", "s": "Tipe data yang paling tepat untuk menyimpan tinggi badan seperti 152.5 cm adalah ...", "o": ["INTEGER", "REAL", "STRING", "BOOLEAN"], "id": "pg03", "urut": true}, {"tipe": "pg", "bab": "Variabel & Ekspresi", "s": "Hasil dari `17 MOD 5` adalah ...", "o": ["2", "3", "3.4", "12"], "id": "pg04", "urut": true}, {"tipe": "pg", "bab": "Flowchart", "s": "Simbol flowchart untuk membaca input atau menampilkan output adalah ...", "o": ["Persegi panjang", "Belah ketupat", "Jajaran genjang", "Lonjong (oval)"], "id": "pg05"}, {"tipe": "pg", "bab": "Struktur Kontrol", "s": "Struktur kontrol yang memilih satu jalur berdasarkan kondisi BENAR atau SALAH disebut ...", "o": ["Sekuensial", "Seleksi", "Pengulangan", "Dekomposisi"], "id": "pg06"}, {"tipe": "pg", "bab": "Subprogram", "s": "Perbedaan utama FUNGSI dan PROSEDUR dalam pseudocode adalah ...", "o": ["Fungsi mengembalikan nilai, sedangkan prosedur hanya melakukan aksi", "Prosedur mengembalikan nilai, sedangkan fungsi hanya melakukan aksi", "Fungsi tidak boleh memiliki parameter, sedangkan prosedur boleh", "Prosedur hanya boleh dipanggil satu kali, sedangkan fungsi berkali-kali"], "id": "pg07"}, {"tipe": "pg", "bab": "Konversi ke Python", "s": "Padanan Python untuk pseudocode `JIKA LAIN` adalah ...", "o": ["`elif:`", "`else if:`", "`otherwise:`", "`else:`"], "id": "pg08"}, {"tipe": "pg", "bab": "Flowchart", "s": "Perhatikan potongan algoritma rata-rata berikut. Baris manakah yang digambar dengan simbol belah ketupat jika dibuat flowchart-nya?", "o": ["`INPUT nilai`", "`total ← total + nilai`", "`SELAMA nilai ≠ -1`", "`OUTPUT total`"], "id": "pg09", "kode": "INPUT nilai\nSELAMA nilai ≠ -1\n  total ← total + nilai\n  INPUT nilai\nAKHIR SELAMA\nOUTPUT total"}, {"tipe": "pg", "bab": "Variabel & Ekspresi", "s": "Berapakah nilai hasil setelah baris berikut dijalankan?", "o": ["9", "14", "19", "36"], "id": "pg10", "kode": "hasil ← 20 − 8 ÷ 4 × 3", "urut": true}, {"tipe": "pg", "bab": "Struktur Kontrol", "s": "Apa output pseudocode berikut?", "o": ["6", "9", "14", "36"], "id": "pg11", "kode": "total ← 0\nUNTUK i DARI 1 HINGGA 3\n  total ← total + i × i\nAKHIR UNTUK\nOUTPUT total", "urut": true}, {"tipe": "pg", "bab": "Struktur Kontrol", "s": "Program meminta pengguna mengetik PIN terus-menerus sampai PIN-nya benar. Struktur yang paling tepat adalah ...", "o": ["`UNTUK i DARI 1 HINGGA 3`", "`UNTUK SETIAP item DALAM daftar`", "`SELAMA pin ≠ pin_benar`", "`JIKA pin = pin_benar MAKA`"], "id": "pg12"}, {"tipe": "pg", "bab": "Konversi ke Python", "s": "Pseudocode `UNTUK i DARI 1 HINGGA 10` dikonversi ke Python menjadi ...", "o": ["`for i in range(1, 10):`", "`for i in range(1, 11):`", "`for i in range(10):`", "`for i from 1 to 10:`"], "id": "pg13"}, {"tipe": "pg", "bab": "Subprogram", "s": "Perhatikan pseudocode berikut. Yang disebut argumen pada pemanggilan tersebut adalah ...", "o": ["p dan l", "kelas", "8 dan 9", "72"], "id": "pg14", "kode": "FUNGSI hitung_luas(p, l)\n  KEMBALIKAN p × l\nAKHIR FUNGSI\n\nkelas ← hitung_luas(8, 9)"}, {"tipe": "pg", "bab": "Flowchart", "s": "Dalam flowchart, pengulangan (loop) digambarkan dengan ...", "o": ["Simbol lingkaran khusus yang diberi tulisan ULANG", "Garis ganda yang menghubungkan dua simbol proses", "Panah yang kembali ke simbol keputusan membentuk siklus", "Simbol trapesium yang diletakkan sebelum SELESAI"], "id": "pg15"}, {"tipe": "pg", "bab": "Struktur Kontrol", "s": "Perhatikan fungsi berikut. Apa hasil predikat(85)?", "o": ["\"B\"", "\"C\"", "\"D\"", "\"E\""], "id": "pg16", "kode": "FUNGSI predikat(nilai)\n  JIKA nilai >= 60 MAKA\n    KEMBALIKAN \"D\"\n  JIKA LAIN JIKA nilai >= 70 MAKA\n    KEMBALIKAN \"C\"\n  JIKA LAIN JIKA nilai >= 80 MAKA\n    KEMBALIKAN \"B\"\n  JIKA LAIN\n    KEMBALIKAN \"E\"\n  AKHIR JIKA\nAKHIR FUNGSI", "urut": true}, {"tipe": "pg", "bab": "Struktur Kontrol", "s": "Apa yang terjadi jika pseudocode berikut dijalankan?", "o": ["Mencetak 1 sampai 5 lalu berhenti", "Tidak mencetak apa pun", "Mencetak 1 satu kali lalu berhenti", "Mencetak 1 terus-menerus tanpa berhenti"], "id": "pg17", "kode": "i ← 1\nSELAMA i ≤ 5\n  OUTPUT i\nAKHIR SELAMA"}, {"tipe": "pg", "bab": "Variabel & Ekspresi", "s": "Perhatikan pseudocode berikut. Data yang dimasukkan berurutan: 75, 85, 95, -1. Output-nya adalah ...", "o": ["85", "63.5", "63.75", "254"], "id": "pg18", "kode": "total ← 0\njumlah ← 0\nINPUT nilai\nSELAMA nilai ≠ -1\n  total ← total + nilai\n  jumlah ← jumlah + 1\n  INPUT nilai\nAKHIR SELAMA\nOUTPUT total ÷ jumlah"}, {"tipe": "pg", "bab": "Subprogram", "s": "Perhatikan pseudocode berikut. Jika diubah ke Python lalu dijalankan, yang terjadi adalah ...", "o": ["Tercetak 45000, lalu tercetak 5000 sebagai nilai potongan", "Tercetak 45000, lalu error karena potongan variabel lokal", "Tercetak 50000, lalu tercetak 5000 sebagai nilai potongan", "Error di awal karena fungsi ditulis sebelum MULAI"], "id": "pg19", "kode": "FUNGSI diskon(harga)\n  potongan ← harga × 0.1\n  KEMBALIKAN harga − potongan\nAKHIR FUNGSI\n\nMULAI\n  bayar ← diskon(50000)\n  OUTPUT bayar\n  OUTPUT potongan\nSELESAI"}, {"tipe": "pg", "bab": "Struktur Kontrol", "s": "Pada FizzBuzz, urutan pengecekan diubah menjadi `i MOD 3` dulu, lalu `i MOD 5`, lalu `i MOD 15`. Apa yang tercetak untuk i = 30?", "o": ["\"Fizz\"", "\"Buzz\"", "\"FizzBuzz\"", "30"], "id": "pg20"}, {"tipe": "pg", "bab": "Konversi ke Python", "s": "Konversi Python yang benar untuk pseudocode berikut adalah ...", "o": ["`umur = input(\"Umur: \")` lalu `if umur >= 17:` … `else:` …", "`umur = int(input(\"Umur: \"))` lalu `if umur => 17:` … `else:` …", "`umur = int(input(\"Umur: \"))` lalu `if umur >= 17:` … `else if:` …", "`umur = int(input(\"Umur: \"))` lalu `if umur >= 17:` … `else:` …"], "id": "pg21", "kode": "INPUT umur\nJIKA umur ≥ 17 MAKA\n  OUTPUT \"Boleh\"\nJIKA LAIN\n  OUTPUT \"Belum\"\nAKHIR JIKA"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Rekam jejak digital adalah ...", "o": ["Data unggahan foto, video, dan status yang sengaja kita bagikan saja", "Semua data dari aktivitas digital, baik disengaja maupun terekam otomatis", "Riwayat aktivitas yang otomatis terhapus saat kita keluar dari aplikasi", "Data akun yang hanya bisa dilihat oleh pemilik akun itu sendiri"], "id": "pg22"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Manakah yang termasuk jejak AKTIF?", "o": ["Riwayat pencarian tersimpan di akun", "Alamat IP perangkat tercatat saat membuka situs", "Menulis komentar di sebuah video", "Jam pintar mencatat langkah kaki"], "id": "pg23"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Manakah yang termasuk jejak PASIF?", "o": ["Aplikasi ojek daring merekam rute perjalanan", "Mengunggah foto ke story", "Memberi ulasan bintang 5 untuk sebuah produk", "Mengirim pesan suara di grup kelas"], "id": "pg24"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Menurut materi, jejak digital paling tepat diibaratkan dengan ...", "o": ["Jejak di pasir pantai yang hilang tersapu ombak", "Tulisan kapur di papan tulis", "Embun di kaca jendela", "Jejak di semen basah yang mengeras dan bertahan lama"], "id": "pg25"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Pertanyaan kunci untuk mengenali jejak AKTIF adalah ...", "o": ["“Apakah aku menekan tombol kirim atau unggah?”", "“Apakah aku sedang terhubung ke Wi-Fi?”", "“Apakah aplikasinya gratis?”", "“Apakah ini terekam hanya karena aku memakai layanan?”"], "id": "pg26"}, {"tipe": "pg", "bab": "Siapa Membaca Jejak", "s": "Menggabungkan informasi kecil yang tersebar di banyak tempat hingga membentuk gambaran utuh tentang seseorang disebut ...", "o": ["Enkripsi", "Agregasi informasi", "Gelembung filter", "Verifikasi dua langkah"], "id": "pg27"}, {"tipe": "pg", "bab": "Audit & Hak Data", "s": "Undang-undang yang memberi hak kepada subjek data untuk menghapus data pribadi tentang dirinya adalah ...", "o": ["UU No. 20 Tahun 2003 tentang Sistem Pendidikan Nasional", "UU No. 14 Tahun 2005 tentang Guru dan Dosen", "UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi", "UU No. 23 Tahun 2002 tentang Perlindungan Anak"], "id": "pg28"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Raka mengetik “cara cepat hafal rumus luas lingkaran” di mesin pencari, lalu riwayat pencariannya tersimpan. Riwayat itu termasuk jejak pasif karena ...", "o": ["Raka mengetiknya sendiri, jadi dianggap tidak meninggalkan jejak", "Raka membagikan hasil pencariannya ke grup kelas setelah itu", "Riwayat itu tersimpan otomatis oleh layanan tanpa Raka bagikan", "Pencarian tentang pelajaran sekolah tidak dihitung sebagai jejak"], "id": "pg29"}, {"tipe": "pg", "bab": "Siapa Membaca Jejak", "s": "Pada kegiatan “Jadi Algoritma”, data yang paling dipercaya sistem rekomendasi untuk menebak minat Raka adalah ...", "o": ["Lama menonton, terutama video yang ditonton sampai habis", "Jam membuka video, terutama yang dibuka pada malam hari", "Panjang judul video, terutama judul yang memuat kata kunci", "Jumlah video di riwayat, terutama yang dibuka paling awal"], "id": "pg30"}, {"tipe": "pg", "bab": "Siapa Membaca Jejak", "s": "Gelembung filter (filter bubble) adalah ...", "o": ["Fitur aplikasi untuk menyaring dan menyembunyikan komentar kasar", "Keadaan ketika algoritma hanya menyajikan konten yang mirip jejak lama kita", "Pengaturan privasi agar akun kita tidak muncul di hasil pencarian", "Iklan yang muncul secara acak tanpa melihat riwayat pengguna"], "id": "pg31"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Unggahan yang sudah dihapus belum tentu hilang dari internet. Alasan yang paling tepat adalah ...", "o": ["Penghapusan baru berlaku setelah akun tidak aktif selama satu tahun", "Unggahan yang dihapus otomatis dipindahkan ke akun cadangan pengguna", "Mesin pencari wajib menyimpan semua unggahan secara permanen", "Unggahan bisa sudah ditangkap layar, dibagikan ulang, atau diarsipkan"], "id": "pg32"}, {"tipe": "pg", "bab": "Siapa Membaca Jejak", "s": "@raka.ix menulis: “Liburan ke Bali minggu depan! Rumah kosong seminggu, hehe.” Risiko paling serius dari unggahan ini adalah ...", "o": ["Teman-temannya merasa iri dan berhenti mengikuti akunnya", "Orang asing tahu kapan rumahnya kosong dan bisa mencuri", "Algoritma akan terus menampilkan iklan tiket pesawat ke Bali", "Kuota internetnya cepat habis karena mengunggah banyak foto"], "id": "pg33"}, {"tipe": "pg", "bab": "Jejak Aktif & Pasif", "s": "Raka menekan “Izinkan” saat gim baru meminta akses ke kontak ponselnya. Analisis yang paling tepat adalah ...", "o": ["Murni jejak aktif, karena izin hanya diberikan satu kali saja", "Tidak meninggalkan jejak, karena Raka hanya memberi izin akses", "Awalnya tindakan aktif, lalu data kontak terus diambil secara pasif", "Murni jejak pasif, karena Raka tidak mengunggah apa pun ke gim"], "id": "pg34"}, {"tipe": "pg", "bab": "Audit & Hak Data", "s": "Akun Dimas bersifat publik, lokasi otomatis kameranya aktif, dan bionya memuat nama sekolah serta kelas. Dua tindakan prioritas yang paling tepat adalah ...", "o": ["Mematikan lokasi otomatis dan menghapus info sekolah dari bio", "Menghapus semua akun media sosial dan berhenti memakai internet", "Mengganti foto profil dan menambah pengikut agar terlihat aman", "Menunggu sampai ada masalah, lalu melapor ke pihak berwajib"], "id": "pg35"}, {"tipe": "aon", "bab": "Pengantar Pseudocode", "s": "Manakah pasangan kata kunci pembuka–penutup yang sesuai konvensi pseudocode modul? Pilih SEMUA yang benar.", "o": ["`JIKA … AKHIR JIKA`", "`SELAMA … AKHIR SELAMA`", "`MULAI … AKHIR MULAI`", "`PROSEDUR … AKHIR PROSEDUR`", "`UNTUK … SELESAI`"], "id": "aon36"}, {"tipe": "aon", "bab": "Konversi ke Python", "s": "Manakah padanan pseudocode ke Python yang benar? Pilih SEMUA yang benar.", "o": ["`←` menjadi `=`", "`≠` menjadi `!=`", "`MOD` menjadi `%`", "`DAN` menjadi `&&`", "`TAMBAH x KE arr` menjadi `arr.add(x)`"], "id": "aon37"}, {"tipe": "aon", "bab": "Flowchart", "s": "Seorang murid membuat flowchart dengan ciri berikut:\n1. Diawali simbol lonjong bertuliskan MULAI.\n2. INPUT nilai digambar di dalam persegi panjang.\n3. Belah ketupat “nilai ≥ 70?” hanya punya satu panah keluar berlabel Ya.\n4. Panah dari OUTPUT \"Lulus\" berakhir di ruang kosong.\n5. Diakhiri simbol lonjong bertuliskan SELESAI.\nKesalahan apa saja yang ada? Pilih SEMUA yang benar.", "o": ["INPUT nilai seharusnya digambar dengan jajaran genjang", "Belah ketupat seharusnya punya dua keluaran, Ya dan Tidak", "Ada panah menggantung yang tidak berakhir di simbol", "MULAI seharusnya digambar dengan belah ketupat karena awal keputusan", "SELESAI seharusnya digambar dengan jajaran genjang karena berupa output"], "id": "aon38"}, {"tipe": "aon", "bab": "Struktur Kontrol", "s": "Perhatikan pseudocode berikut. Angka berapa saja yang dicetak? Pilih SEMUA yang benar.", "o": ["2", "4", "16", "20", "32"], "id": "aon39", "kode": "x ← 1\nSELAMA x < 20\n  x ← x × 2\n  JIKA x MOD 4 = 0 MAKA\n    OUTPUT x\n  AKHIR JIKA\nAKHIR SELAMA"}, {"tipe": "aon", "bab": "Jejak Aktif & Pasif", "s": "Manakah yang termasuk jejak PASIF? Pilih SEMUA yang benar.", "o": ["Riwayat tontonan video", "Cookie yang disimpan situs belanja", "Ulasan bintang 5 yang ditulis untuk sebuah toko", "Lokasi yang dicatat ponsel saat fitur lokasi aktif", "Komentar yang dikirim di grup kelas"], "id": "aon40"}, {"tipe": "aon", "bab": "Siapa Membaca Jejak", "s": "Dari profil @raka.ix, informasi mana yang bisa dipakai orang lain untuk menebak jawaban verifikasi atau pertanyaan keamanan akun Raka? Pilih SEMUA yang benar.", "o": ["Tanggal lahir (“Sweet fifteen! 14 Agustus”)", "Nama kucing kesayangan (“Mochi”)", "Jadwal les renang tiap Kamis jam 4 sore", "Rencana liburan ke Bali minggu depan", "Komentar mengejek teman dua tahun lalu"], "id": "aon41"}, {"tipe": "aon", "bab": "Audit & Hak Data", "s": "Manakah tindakan yang bekerja SEBELUM masalah terjadi untuk melindungi jejak digital? Pilih SEMUA yang benar.", "o": ["Mematikan lokasi otomatis di kamera", "Mengaktifkan verifikasi dua langkah", "Mencabut izin aplikasi yang tidak dipakai", "Mengajukan penghapusan informasi lewat penetapan pengadilan", "Menandai teman di foto tanpa meminta izin lebih dulu"], "id": "aon42"}, {"tipe": "mtf", "bab": "Pengantar Pseudocode", "s": "Tentukan Benar atau Salah setiap pernyataan tentang pseudocode dan flowchart berikut.", "o": ["Pseudocode bisa langsung dijalankan oleh komputer.", "Pseudocode tidak terikat pada satu bahasa pemrograman tertentu.", "Flowchart membuat alur dan percabangan terlihat sekilas.", "Flowchart mudah diubah ketika algoritma program yang besar terus berkembang."], "id": "mtf43"}, {"tipe": "mtf", "bab": "Variabel & Ekspresi", "s": "Tentukan Benar atau Salah setiap pernyataan tentang tipe data dan operator berikut.", "o": ["Variabel sudah_bayar paling tepat bertipe BOOLEAN.", "Dalam pseudocode modul, tanda = dipakai untuk menyimpan nilai ke variabel.", "Jika n MOD 2 = 0, maka n adalah bilangan genap.", "Di Python, 7 // 2 menghasilkan 3.5."], "id": "mtf44"}, {"tipe": "mtf", "bab": "Subprogram", "s": "Tentukan Benar atau Salah setiap pernyataan tentang subprogram dan modularitas berikut.", "o": ["Di Python, prosedur ditulis dengan def tanpa return.", "Satu fungsi sebaiknya mengerjakan banyak tugas sekaligus agar programnya pendek.", "Prinsip DRY berarti rumus yang sama cukup ditulis sekali dalam fungsi, lalu dipanggil berulang.", "Variabel lokal di dalam fungsi bisa dipakai bebas di program utama."], "id": "mtf45"}, {"tipe": "mtf", "bab": "Struktur Kontrol", "s": "Perhatikan pseudocode berikut, lalu tentukan Benar atau Salah untuk input n = 5.", "o": ["Output program adalah 120.", "Badan loop dijalankan sebanyak 5 kali.", "Setelah loop berhenti, nilai i adalah 5.", "Jika n = 0, output program adalah 0."], "id": "mtf46", "kode": "MULAI\n  INPUT n\n  hasil ← 1\n  i ← 1\n  SELAMA i ≤ n\n    hasil ← hasil × i\n    i ← i + 1\n  AKHIR SELAMA\n  OUTPUT hasil\nSELESAI"}, {"tipe": "mtf", "bab": "Konversi ke Python", "s": "Tentukan Benar atau Salah setiap pernyataan tentang konversi pseudocode ke Python berikut.", "o": ["`UNTUK i DARI 1 HINGGA n` dikonversi menjadi `for i in range(1, n):`", "Elemen pertama `data[1]` di pseudocode modul ditulis `data[0]` di Python.", "Fungsi `input()` di Python selalu menghasilkan teks (str).", "`if x = 5:` adalah penulisan perbandingan yang benar di Python."], "id": "mtf47"}, {"tipe": "mtf", "bab": "Jejak Aktif & Pasif", "s": "Tentukan Benar atau Salah setiap pernyataan tentang jejak digital sehari-hari berikut.", "o": ["Orang yang hanya menonton video tanpa mengunggah apa pun tidak meninggalkan jejak digital.", "Akun yang dikunci (privat) tetap meninggalkan jejak digital.", "Foto berseragam sekolah bisa membantu orang asing mengetahui tempat kita bersekolah.", "Jika unggahan sudah dihapus, jejaknya pasti hilang dari internet."], "id": "mtf48"}, {"tipe": "mtf", "bab": "Siapa Membaca Jejak", "s": "Tentukan Benar atau Salah setiap pernyataan tentang cara algoritma membaca jejak kita.", "o": ["Sistem rekomendasi adalah KA yang belajar dari data jejak pengguna.", "Video yang dilewati setelah beberapa detik menjadi sinyal bahwa pengguna kurang tertarik.", "KA rekomendasi mengetahui isi hati pengguna dengan pasti.", "Tebakan algoritma bisa salah, misalnya ketika ponsel dipakai adik."], "id": "mtf49"}, {"tipe": "mtf", "bab": "Audit & Hak Data", "s": "Tentukan Benar atau Salah setiap pernyataan tentang hak atas data dan etika digital berikut.", "o": ["Menurut UU PDP Pasal 8, subjek data pribadi berhak menghapus data pribadi tentang dirinya.", "Menurut UU ITE Pasal 26 ayat (3), penghapusan informasi yang tidak relevan dilakukan atas permintaan orang yang bersangkutan berdasarkan penetapan pengadilan.", "Karena data pribadi dilindungi hukum, kita tidak perlu berhati-hati sebelum mengunggah.", "Menandai teman di foto tanpa izin dapat menciptakan jejak digital bagi teman tersebut."], "id": "mtf50"}];
+const SOAL_LAMA={};
+const BAB=["Pengantar Pseudocode", "Variabel & Ekspresi", "Struktur Kontrol", "Subprogram", "Flowchart", "Konversi ke Python", "Jejak Aktif & Pasif", "Siapa Membaca Jejak", "Audit & Hak Data"];
+const SARAN={"Pengantar Pseudocode": "Baca lagi slide “Apa Itu Pseudocode?” dan “Pseudocode atau Flowchart?” di Modul 2.", "Variabel & Ekspresi": "Ulangi slide tipe data, operator MOD, urutan operasi, lalu latihan tracing algoritma rata-rata.", "Struktur Kontrol": "Latih tracing dengan tabel jejak, lalu pelajari slide “Tiga Jebakan Pengulangan” dan contoh kalkulator predikat.", "Subprogram": "Bedakan lagi fungsi dan prosedur, argumen dan parameter, serta scope variabel lokal.", "Flowchart": "Hafalkan enam simbol flowchart standar dan empat aturan wajib flowchart.", "Konversi ke Python": "Pelajari slide “Kamus Konversi” dan “Enam Jebakan Saat Konversi ke Python”.", "Jejak Aktif & Pasif": "Pakai dua pertanyaan kunci: “Apakah aku menekan kirim/unggah?” (aktif) dan “Apakah ini terekam karena aku memakai layanan?” (pasif).", "Siapa Membaca Jejak": "Ulangi kasus profil @raka.ix, konsep agregasi informasi, dan cara algoritma rekomendasi menebak minat.", "Audit & Hak Data": "Pelajari contoh tindakan hari ini/minggu ini serta isi UU PDP Pasal 8 dan UU ITE Pasal 26."};
+const KELAS=['IX-A','IX-B','IX-C','IX-D','IX-E','IX-F','IX-G'];
+const NAMA_TIPE={pg:'Pilihan Ganda',aon:'Pilihan Ganda Kompleks',mtf:'Benar–Salah'};
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>');
+const kodeBlok=q=>q.kode?`<pre class="kode">${esc(q.kode)}</pre>`:'';
+const LS={get(k,d){try{const v=localStorage.getItem('sas9_'+k);return v?JSON.parse(v):d;}catch(e){return d;}},set(k,v){try{localStorage.setItem('sas9_'+k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem('sas9_'+k);}catch(e){}}};
+function acak(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+async function post(body,retry=2){
+  for(let i=0;i<=retry;i++){
+    try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}); if(!r.ok)throw 0; return await r.json();}
+    catch(e){ if(i===retry) return {ok:false,jaringan:true}; await new Promise(r=>setTimeout(r,1200*(i+1))); }
+  }
+}
+async function getMurid(kelas){ const r=await fetch(API+(API.includes('?')?'&':'?')+'aksi=murid&kelas='+encodeURIComponent(kelas)); return r.json(); }
+
+/* ---------- diagram ---------- */
+function svgDiagram(g){
+  const d=g.tree||g.graf, isTree=!!g.tree, kotak=d.kotak;
+  let s=`<svg viewBox="0 0 ${d.w} ${d.h}" width="${d.w}"><defs><marker id="ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0L10,5L0,10z" fill="#4a5872"/></marker></defs>`;
+  const R=kotak?0:20;
+  d.e.forEach(([a,b])=>{ let [x1,y1]=d.n[a],[x2,y2]=d.n[b];
+    if(d.arah){ const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),r=30; x1+=dx/L*r;y1+=dy/L*r;x2-=dx/L*r;y2-=dy/L*r; }
+    s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#4a5872" stroke-width="2.2" ${d.arah?'marker-end="url(#ah)"':''}/>`; });
+  Object.entries(d.n).forEach(([k,[x,y]])=>{
+    if(kotak){ const w=Math.max(54,k.length*8.4+16); s+=`<rect x="${x-w/2}" y="${y-15}" width="${w}" height="30" rx="7" fill="#fff" stroke="#4a5872" stroke-width="2"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="14" font-family="system-ui,sans-serif">${esc(k)}</text>`; }
+    else { const r=k.length>2?28:R; s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="#4a5872" stroke-width="2.2"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="${k.length>2?13:16}" font-weight="700" font-family="system-ui,sans-serif">${esc(k)}</text>`; }
+  });
+  return `<div class="fig">${s}</svg></div>`;
+}
+
+/* ---------- state ---------- */
+let S=LS.get('sesi',null);   // {aid,kelas,absen,nama,ke,mulai,batas,urut:[idx],opsi:{id:[perm]},jawab:{id:..},ragu:{id:true},pelanggaran,lamaKeluar,cur}
+let layar='login', pantau=false, selesai=false;
+const simpanLokal=()=>LS.set('sesi',S);
+
+function header(){
+  $('#hInfo').textContent=S&&layar!=='login'?`${S.nama.split(' ').slice(0,2).join(' ')} · ${S.kelas}`:'';
+  const t=$('#hTimer'), l=$('#hLanggar');
+  t.style.display=l.style.display=(S&&layar==='ujian')?'':'none';
+  if(S){ l.textContent=`Pelanggaran ${S.pelanggaran}/${MAKS_LANGGAR}`; l.className='pill '+(S.pelanggaran>=MAKS_LANGGAR-1?'bad':S.pelanggaran>0?'warn':''); }
+}
+
+/* ---------- LOGIN ---------- */
+function viewLogin(pesan){
+  layar='login'; pantau=false; header();
+  $('#app').innerHTML=`<div class="card narrow"><h2>Latihan SAS 1 Informatika</h2><p class="mut sm" style="margin-top:-4px">Kelas IX · Pseudocode &amp; Flowchart · Jejak Digital · 50 soal · ${DURASI_MENIT} menit</p>
+  <label class="f">Kelas</label><select class="f" id="lKelas"><option value="">— pilih kelas —</option>${KELAS.map(k=>`<option>${k}</option>`).join('')}</select>
+  <label class="f">Nama</label><select class="f" id="lNama" disabled><option value="">— pilih kelas dulu —</option></select>
+  <button class="btn pri big" id="lMasuk" style="width:100%;margin-top:16px">Mulai latihan</button>
+  <button class="btn" id="lRiwayat" style="width:100%;margin-top:8px">📄 Lihat hasil &amp; pembahasan sebelumnya</button>
+  <div id="lMsg">${pesan?`<div class="msg info">${esc(pesan)}</div>`:''}</div></div>`;
+  const kel=$('#lKelas'), nm=$('#lNama'), msg=$('#lMsg');
+  kel.onchange=async()=>{ nm.disabled=true; nm.innerHTML='<option>Memuat…</option>'; if(!kel.value){nm.innerHTML='<option value="">— pilih kelas dulu —</option>';return;}
+    try{ const r=await getMurid(kel.value); if(!r.ok)throw 0; nm.innerHTML='<option value="">— pilih nama —</option>'+r.data.map(m=>`<option value="${m.absen}">${m.absen}. ${esc(m.nama)}</option>`).join(''); nm.disabled=false; }
+    catch(e){ nm.innerHTML='<option value="">Gagal memuat</option>'; msg.innerHTML='<div class="msg no">Tidak bisa terhubung ke server. Periksa internet lalu pilih kelas lagi.</div>'; } };
+  $('#lMasuk').onclick=()=>{ if(!kel.value||!nm.value){ msg.innerHTML='<div class="msg no">Pilih kelas dan nama dulu.</div>'; return; }
+    viewPetunjuk({kelas:kel.value,absen:+nm.value,nama:nm.options[nm.selectedIndex].text.replace(/^\d+\.\s*/,'')}); };
+  $('#lRiwayat').onclick=()=>{ if(!kel.value||!nm.value){ msg.innerHTML='<div class="msg no">Pilih kelas dan nama dulu.</div>'; return; }
+    viewRiwayat({kelas:kel.value,absen:+nm.value,nama:nm.options[nm.selectedIndex].text.replace(/^\d+\.\s*/,'')}); };
+}
+
+function viewPetunjuk(m){
+  layar='petunjuk'; header();
+  $('#app').innerHTML=`<div class="card mid"><h2>Petunjuk</h2><p><b>${esc(m.nama)}</b> · ${esc(m.kelas)}</p>
+  <ul class="rules">
+   <li>Ada <b>50 soal</b>: 35 pilihan ganda, 7 pilihan ganda kompleks (pilih semua jawaban yang benar), dan 8 soal benar–salah. Waktu <b>${DURASI_MENIT} menit</b>.</li>
+   <li>Urutan soal dan pilihan jawaban diacak, jadi tiap orang berbeda.</li>
+   <li>Ujian berjalan dalam <b>layar penuh</b>. Menekan <b>Esc</b>, pindah tab/aplikasi, klik kanan, menyalin/menempel, atau membuka Developer Tools dihitung <b>pelanggaran</b>.</li>
+   <li>Setiap pelanggaran membuat soal tertutup sementara, sedangkan <b>waktu tetap berjalan</b>. Pada <b>pelanggaran ke-${MAKS_LANGGAR}</b>, jawaban terkirim otomatis dan ujian selesai.</li>
+   <li>Jawaban tersimpan otomatis di perangkat ini. Tandai <b>Ragu-ragu</b> untuk soal yang ingin diperiksa lagi.</li>
+   <li>Setelah selesai, kamu akan melihat nilai, umpan balik per materi, dan pembahasan setiap soal.</li>
+  </ul>
+  <div class="row" style="justify-content:space-between;margin-top:14px"><button class="btn" id="bKembali">← Ganti nama</button><button class="btn pri big" id="bMulai">Mulai ujian (layar penuh)</button></div><div id="pMsg"></div></div>`;
+  $('#bKembali').onclick=()=>viewLogin();
+  $('#bMulai').onclick=async()=>{ const b=$('#bMulai'); b.disabled=true; b.innerHTML='<span class="spin"></span> Menyiapkan…';
+    try{ await masukLayarPenuh(); }catch(e){ b.disabled=false; b.textContent='Mulai ujian (layar penuh)'; $('#pMsg').innerHTML='<div class="msg no">Layar penuh gagal diaktifkan. Gunakan Chrome di laptop, lalu tekan tombol lagi.</div>'; return; }
+    const r=await post({aksi:'mulai',kelas:m.kelas,absen:m.absen});
+    if(!r.ok){ await keluarLayarPenuh(); b.disabled=false; b.textContent='Mulai ujian (layar penuh)'; $('#pMsg').innerHTML=`<div class="msg no">${esc(r.pesan||'Tidak bisa terhubung ke server. Coba lagi.')}</div>`; return; }
+    const urut=[...acak(SOAL.filter(q=>q.tipe==='pg')),...acak(SOAL.filter(q=>q.tipe==='aon')),...acak(SOAL.filter(q=>q.tipe==='mtf'))].map(q=>SOAL.indexOf(q));
+    const opsi={}; SOAL.forEach(q=>{ const idx=q.o.map((_,i)=>i); opsi[q.id]=(q.urut?idx:acak(idx)); });
+    const now=Date.now();
+    S={aid:r.aid,kelas:m.kelas,absen:m.absen,nama:r.nama||m.nama,ke:r.ke,mulai:now,batas:now+DURASI_MENIT*60000,urut,opsi,jawab:{},ragu:{},pelanggaran:0,lamaKeluar:0,cur:0};
+    simpanLokal(); viewUjian(); };
+}
+
+async function masukLayarPenuh(){ if(!document.fullscreenElement) await document.documentElement.requestFullscreen({navigationUI:'hide'}); try{ if(navigator.keyboard&&navigator.keyboard.lock) await navigator.keyboard.lock(['Escape']); }catch(e){} }
+async function keluarLayarPenuh(){ try{ if(navigator.keyboard&&navigator.keyboard.unlock) navigator.keyboard.unlock(); if(document.fullscreenElement) await document.exitFullscreen(); }catch(e){} }
+
+/* ---------- UJIAN ---------- */
+function terjawab(q){ const a=S.jawab[q.id]; if(a==null)return false; if(q.tipe==='pg')return a>=0; if(q.tipe==='aon')return a.length>0; return a.every(x=>x===true||x===false); }
+function viewUjian(){
+  layar='ujian'; pantau=true; header();
+  $('#app').innerHTML=`<div id="uj"><div class="card nav" style="padding:14px"><div class="sec">Navigasi soal</div><div id="navG"></div>
+   <div class="legend"><span><i style="background:#d3f9d8"></i>dijawab</span><span><i style="background:#fff3bf"></i>ragu</span><span><i style="background:#fff"></i>belum</span></div>
+   <div class="sm mut" id="nInfo"></div><button class="btn ok" id="bKirim" style="width:100%;margin-top:10px">Selesai &amp; kirim</button></div>
+   <div class="card" id="qBox"></div></div>`;
+  $('#bKirim').onclick=konfirmasi;
+  tampil(S.cur||0);
+}
+function renderNav(){
+  const sec=[['pg','Pilihan ganda'],['aon','PG kompleks'],['mtf','Benar–salah']];
+  let h='';
+  sec.forEach(([t,lbl])=>{ h+=`<div class="sec">${lbl}</div><div class="navgrid">`;
+    S.urut.forEach((si,n)=>{ const q=SOAL[si]; if(q.tipe!==t)return; h+=`<button data-n="${n}" class="${terjawab(q)?'isi':''} ${S.ragu[q.id]?'ragu':''} ${n===S.cur?'cur':''}">${n+1}</button>`; });
+    h+='</div>'; });
+  $('#navG').innerHTML=h;
+  $$('#navG button').forEach(b=>b.onclick=()=>tampil(+b.dataset.n));
+  const n=S.urut.filter(si=>terjawab(SOAL[si])).length; $('#nInfo').textContent=`${n} dari ${SOAL.length} dijawab`;
+}
+function tampil(n){
+  S.cur=n; simpanLokal();
+  const q=SOAL[S.urut[n]], perm=S.opsi[q.id], a=S.jawab[q.id];
+  let body='';
+  if(q.tipe==='pg'){ body='<div class="ins">Pilih satu jawaban yang paling tepat.</div>'+perm.map((oi,j)=>`<button class="opt ${a===oi?'sel':''}" data-o="${oi}"><span class="k">${'ABCD'[j]}</span><span>${fmt(q.o[oi])}</span></button>`).join(''); }
+  else if(q.tipe==='aon'){ const set=new Set(a||[]); body='<div class="ins">Pilih <b>semua</b> jawaban yang benar (bisa lebih dari satu). Nilai diberikan jika semua pilihanmu tepat.</div>'+perm.map((oi,j)=>`<button class="opt aon ${set.has(oi)?'sel':''}" data-o="${oi}"><span class="k">${set.has(oi)?'✓':''}</span><span>${fmt(q.o[oi])}</span></button>`).join(''); }
+  else { const v=a||[null,null,null,null]; body='<div class="ins">Tentukan <b>Benar</b> atau <b>Salah</b> untuk setiap pernyataan.</div><table class="tf"><tr><th>Pernyataan</th><th>Benar</th><th>Salah</th></tr>'+perm.map(oi=>`<tr><td>${fmt(q.o[oi])}</td><td class="c"><button class="tfb ${v[oi]===true?'sel':''}" data-o="${oi}" data-v="1">B</button></td><td class="c"><button class="tfb ${v[oi]===false?'sel':''}" data-o="${oi}" data-v="0">S</button></td></tr>`).join('')+'</table>'; }
+  $('#qBox').innerHTML=`<div class="qhead"><b style="font-size:18px">Soal ${n+1}</b><span class="tag ${q.tipe}">${NAMA_TIPE[q.tipe]}</span></div>
+   <div class="stem">${fmt(q.s)}</div>${kodeBlok(q)}${q.gambar?svgDiagram(q.gambar):''}${body}
+   <div class="qfoot"><button class="btn" id="bPrev" ${n===0?'disabled':''}>‹ Sebelumnya</button><button class="btn ragu ${S.ragu[q.id]?'on':''}" id="bRagu">${S.ragu[q.id]?'✓ Ragu-ragu':'Ragu-ragu'}</button><button class="btn pri" id="bNext" ${n===SOAL.length-1?'disabled':''}>Berikutnya ›</button></div>`;
+  $$('#qBox .opt').forEach(b=>b.onclick=()=>{ const oi=+b.dataset.o;
+    if(q.tipe==='pg') S.jawab[q.id]=oi;
+    else { const s=new Set(S.jawab[q.id]||[]); s.has(oi)?s.delete(oi):s.add(oi); S.jawab[q.id]=[...s].sort(); }
+    simpanLokal(); tampil(n); });
+  $$('#qBox .tfb').forEach(b=>b.onclick=()=>{ const v=(S.jawab[q.id]||[null,null,null,null]).slice(); v[+b.dataset.o]=b.dataset.v==='1'; S.jawab[q.id]=v; simpanLokal(); tampil(n); });
+  $('#bPrev').onclick=()=>tampil(n-1); $('#bNext').onclick=()=>tampil(n+1);
+  $('#bRagu').onclick=()=>{ S.ragu[q.id]=!S.ragu[q.id]; simpanLokal(); tampil(n); };
+  renderNav();
+}
+function konfirmasi(){
+  const kosong=S.urut.map((si,n)=>terjawab(SOAL[si])?0:n+1).filter(Boolean), ragu=S.urut.map((si,n)=>S.ragu[SOAL[si].id]?n+1:0).filter(Boolean);
+  const d=document.createElement('div'); d.className='modal';
+  d.innerHTML=`<div class="card"><h2>Kirim jawaban?</h2>${kosong.length?`<p><b>${kosong.length}</b> soal belum dijawab: ${kosong.join(', ')}.</p>`:'<p>Semua soal sudah dijawab.</p>'}${ragu.length?`<p>Ditandai ragu-ragu: ${ragu.join(', ')}.</p>`:''}
+   <p class="sm mut">Setelah dikirim, jawaban tidak bisa diubah.</p><div class="row" style="justify-content:flex-end"><button class="btn" data-b>Periksa lagi</button><button class="btn ok" data-k>Ya, kirim</button></div></div>`;
+  document.body.appendChild(d);
+  d.querySelector('[data-b]').onclick=()=>d.remove();
+  d.querySelector('[data-k]').onclick=()=>{ d.remove(); kirim('Dikirim murid'); };
+}
+async function kirim(alasan){
+  if(selesai||layar==='kirim')return; layar='kirim'; pantau=false; hapusJeda(); header();
+  $('#app').innerHTML='<div class="card narrow" style="text-align:center"><h2><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Mengirim jawaban…</h2></div>';
+  const body={aksi:'kirim',aid:S.aid,jawab:S.jawab,alasan,pelanggaran:S.pelanggaran,lamaKeluar:S.lamaKeluar,detik:Math.round((Math.min(Date.now(),S.batas)-S.mulai)/1000)};
+  let r=await post(body,3);
+  while(r.jaringan){
+    $('#app').innerHTML='<div class="card narrow"><h2>Menunggu koneksi…</h2><p>Jawabanmu aman tersimpan di perangkat ini dan akan dikirim otomatis saat internet kembali. Jangan tutup halaman ini.</p></div>';
+    await new Promise(x=>setTimeout(x,5000)); r=await post(body,0);
+  }
+  selesai=true; await keluarLayarPenuh();
+  if(!r.ok){ $('#app').innerHTML=`<div class="card narrow"><h2>Gagal mengirim</h2><p>${esc(r.pesan||'')}</p></div>`; return; }
+  const sesiLama=S; LS.del('sesi'); viewHasil(r,alasan,sesiLama); S=null; header();
+}
+
+/* ---------- HASIL ---------- */
+function umpanBalik(r){
+  const n=r.nilai, kat=n>=85?['hi','Sangat baik! Kamu siap menghadapi SAS. Pertahankan dengan mengulang materi sekilas sebelum ujian.']:n>=70?['mid','Sudah baik. Ulangi materi yang masih merah di bawah, lalu coba latihan lagi.']:['lo','Perlu belajar lagi. Pelajari saran di bawah, lalu kerjakan latihan ini sekali lagi.'];
+  const urut=BAB.filter(b=>r.perBab[b]);
+  const pc=b=>{const [x,t]=r.perBab[b];return Math.round(x/t*100);};
+  const lemah=urut.filter(b=>pc(b)<70).sort((a,b)=>pc(a)-pc(b));
+  if(lemah.length&&n>=85) kat[1]='Sangat baik! Nilaimu sudah tinggi, tetapi masih ada materi yang perlu diulang sebelum SAS:';
+  else if(lemah.length&&n>=70) kat[1]='Sudah baik. Ulangi materi berikut, lalu coba latihan lagi:';
+  else if(lemah.length) kat[1]='Perlu belajar lagi. Mulailah dari materi berikut, lalu kerjakan latihan ini sekali lagi:';
+  let h=`<div class="fb ${kat[0]}"><b>Umpan balik:</b> ${kat[1]}`;
+  if(lemah.length) h+=`<ul class="saran">${lemah.map(b=>`<li><b>${esc(b)} (${pc(b)}%)</b><br>${esc(SARAN[b]||'')}</li>`).join('')}</ul>`;
+  else h+='<div style="margin-top:6px">Semua materi sudah di atas 70%. Mantap!</div>';
+  h+='</div>';
+  h+=`<b>Penguasaan per materi</b><div class="bars">${urut.map(b=>{const [x,t]=r.perBab[b],p=pc(b);return `<div class="b"><span>${esc(b)}</span><div class="t"><i class="${p<70?'lo':p>=85?'ok':''}" style="width:${p}%"></i></div><span>${p}%</span></div>`;}).join('')}</div>`;
+  return h;
+}
+function viewHasil(r,alasan,s){
+  layar='hasil';
+  const per=r.rincian;
+  let h=`<div class="card mid"><h2>Hasil Latihan SAS</h2><p class="mut" style="margin-top:-6px">${esc(s.nama)} · ${esc(s.kelas)} · percobaan ke-${r.ke}${r.selesai?' · '+esc(tgl(r.selesai)):''}${alasan!=='Dikirim murid'&&alasan!=='Selesai'?` · <b style="color:var(--no)">${esc(alasan)}</b>`:''}</p>
+   <div class="row" style="gap:28px;align-items:flex-end"><div><div class="mut sm">Nilai</div><div class="big">${r.nilai}</div></div><div class="mut">Skor ${String(r.skor).replace('.',',')} dari ${r.maks}</div></div>
+   <div class="stat"><div>Pilihan ganda<b>${per.pg[0]}/${per.pg[1]}</b><span class="sm mut">1 poin per soal</span></div><div>PG kompleks<b>${per.aon[0]}/${per.aon[1]}</b><span class="sm mut">2 poin, harus tepat semua</span></div><div>Benar–salah<b>${String(per.mtf[0]).replace('.',',')}/${per.mtf[1]}</b><span class="sm mut">0,5 poin per pernyataan</span></div><div>Pelanggaran<b>${s.pelanggaran}</b><span class="sm mut">dari ${MAKS_LANGGAR}</span></div></div>
+   ${umpanBalik(r)}
+   <div class="row noprint" style="margin-top:14px"><button class="btn pri" id="bUlang">Kerjakan lagi (soal diacak)</button><button class="btn" id="bPdf">🖨️ Simpan sebagai PDF</button><button class="btn" id="bRiw">📄 Hasil lainnya</button></div></div>
+   <div class="card mid"><h2>Pembahasan</h2>`;
+  s.urut.forEach((si,n)=>{ const q0=SOAL[si], q=((r.versiLama||[]).includes(q0.id)&&SOAL_LAMA[q0.id])||q0, d=r.detail[q.id], a=s.jawab[q.id], perm=s.opsi[q.id];
+    let o='';
+    if(q.tipe==='pg') o=perm.map((oi,j)=>`<div class="o ${oi===d.k?'k':(oi===a?'x':'')}">${'ABCD'[j]}. ${fmt(q.o[oi])}${oi===a?' <b>← jawabanmu</b>':''}</div>`).join('');
+    else if(q.tipe==='aon'){ const pil=new Set(a||[]), kk=new Set(d.k); o=perm.map(oi=>`<div class="o ${kk.has(oi)?'k':(pil.has(oi)?'x':'')}">${kk.has(oi)?'✔':'✘'} ${fmt(q.o[oi])}${pil.has(oi)?' <b>← kamu pilih</b>':''}</div>`).join(''); }
+    else { const v=a||[]; o='<table class="tf"><tr><th>Pernyataan</th><th>Kunci</th><th>Jawabanmu</th></tr>'+perm.map(oi=>`<tr><td>${fmt(q.o[oi])}</td><td class="c"><b>${d.k[oi]?'B':'S'}</b></td><td class="c" style="background:${v[oi]==null?'':(v[oi]===d.k[oi]?'var(--ok2)':'var(--no2)')}">${v[oi]==null?'–':(v[oi]?'B':'S')}</td></tr>`).join('')+'</table>'; }
+    h+=`<div class="rv"><div class="qhead"><b>${d.skor===d.maks?'✅':d.skor>0?'🟡':'❌'} Soal ${n+1}</b><span class="tag ${q.tipe}">${NAMA_TIPE[q.tipe]} · ${String(d.skor).replace('.',',')}/${d.maks}</span></div><div style="white-space:pre-line">${fmt(q.s)}</div>${kodeBlok(q)}${q.gambar?svgDiagram(q.gambar):''}${o}<div class="why">💡 ${esc(d.w)}</div></div>`;
+  });
+  h+='</div>';
+  $('#app').innerHTML=h; window.scrollTo(0,0);
+  $('#bUlang').onclick=()=>{ selesai=false; viewPetunjuk({kelas:s.kelas,absen:s.absen,nama:s.nama}); };
+  $('#bPdf').onclick=()=>{ const t=document.title; document.title=`Hasil Latihan SAS - ${s.nama} - ${s.kelas} - percobaan ${r.ke}`; window.print(); setTimeout(()=>document.title=t,1000); };
+  $('#bRiw').onclick=()=>{ selesai=false; viewRiwayat({kelas:s.kelas,absen:s.absen,nama:s.nama}); };
+}
+
+const tgl=x=>{ try{ return new Date(x).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return x; } };
+async function viewRiwayat(m){
+  layar='riwayat'; header();
+  $('#app').innerHTML=`<div class="card mid"><h2>Hasil sebelumnya</h2><p class="mut" style="margin-top:-6px">${esc(m.nama)} · ${esc(m.kelas)}</p><div id="rList"><p><span class="spin" style="border-color:#8886;border-top-color:#333"></span> Memuat…</p></div>
+   <div class="row" style="margin-top:14px"><button class="btn" id="rBack">← Kembali</button><button class="btn pri" id="rMulai">Mulai latihan baru</button></div></div>`;
+  $('#rBack').onclick=()=>viewLogin(); $('#rMulai').onclick=()=>viewPetunjuk(m);
+  let r; try{ r=await fetch(API+(API.includes('?')?'&':'?')+'aksi=riwayat&kelas='+encodeURIComponent(m.kelas)+'&absen='+m.absen).then(x=>x.json()); }catch(e){ r={ok:false}; }
+  if(!r.ok){ $('#rList').innerHTML='<div class="msg no">Tidak bisa terhubung ke server. Coba lagi.</div>'; return; }
+  if(!r.data.length){ $('#rList').innerHTML='<p class="mut">Belum ada latihan yang selesai dikerjakan.</p>'; return; }
+  $('#rList').innerHTML='<table class="tf"><tr><th>Percobaan</th><th>Selesai</th><th>Nilai</th><th></th></tr>'+r.data.map(x=>`<tr><td>Ke-${x.ke}${x.status!=='Selesai'?`<div class="sm" style="color:var(--no)">${esc(x.status)}</div>`:''}</td><td class="sm">${esc(tgl(x.selesai))}</td><td><b style="font-size:20px">${x.nilai}</b></td><td class="c"><button class="btn" data-aid="${esc(x.aid)}">Buka</button></td></tr>`).join('')+'</table>';
+  $$('#rList [data-aid]').forEach(b=>b.onclick=async()=>{ b.disabled=true; b.innerHTML='<span class="spin" style="border-color:#8886;border-top-color:#333"></span>';
+    let h; try{ h=await fetch(API+(API.includes('?')?'&':'?')+'aksi=hasil&aid='+encodeURIComponent(b.dataset.aid)).then(x=>x.json()); }catch(e){ h={ok:false}; }
+    if(!h.ok){ b.disabled=false; b.textContent='Buka'; return; }
+    const urut=[...SOAL.filter(q=>q.tipe==='pg'),...SOAL.filter(q=>q.tipe==='aon'),...SOAL.filter(q=>q.tipe==='mtf')].map(q=>SOAL.indexOf(q));
+    const opsi={}; SOAL.forEach(q=>opsi[q.id]=q.o.map((_,i)=>i));
+    viewHasil(h,h.status,{nama:m.nama,kelas:m.kelas,absen:m.absen,urut,opsi,jawab:h.jawab||{},pelanggaran:h.pelanggaran}); });
+}
+
+/* ---------- TIMER ---------- */
+setInterval(()=>{
+  if(!S||layar!=='ujian'&&layar!=='jeda')return;
+  const sisa=S.batas-Date.now(), t=$('#hTimer');
+  if(sisa<=0){ t.textContent='00:00'; kirim('Waktu habis'); return; }
+  const m=Math.floor(sisa/60000), s=Math.floor(sisa%60000/1000);
+  t.textContent=`⏱ ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  t.className='pill '+(sisa<5*60000?'bad':sisa<10*60000?'warn':'');
+},500);
+
+/* ---------- PEMANTAUAN ---------- */
+let jeda=false, keluarAt=0, terakhir=0;
+function hapusJeda(){ const d=$('#jeda'); if(d)d.remove(); jeda=false; const a=$('#app'); if(a)a.style.visibility=''; }
+function tampilJeda(isi){
+  let d=$('#jeda');
+  if(!d){ d=document.createElement('div'); d.id='jeda'; d.className='modal'; d.style.cssText='background:#14233c;top:52px'; $('#app').style.visibility='hidden'; document.body.appendChild(d); }
+  d.innerHTML=`<div class="card" style="max-width:560px;text-align:center">${isi}</div>`;
+  const b=$('#bLanjut',d);
+  if(b) b.onclick=async()=>{ b.disabled=true;
+    try{ await masukLayarPenuh(); }catch(e){ b.disabled=false; $('#jMsg',d).textContent='Layar penuh gagal diaktifkan. Tekan tombol lagi.'; return; }
+    const detik=Math.round((Date.now()-keluarAt)/1000); S.lamaKeluar+=detik; simpanLokal();
+    hapusJeda(); terakhir=Date.now(); post({aksi:'kembali',aid:S.aid,detik},1); };
+}
+async function langgar(jenis,saatJeda){
+  if(!pantau||selesai||!S||layar!=='ujian')return;
+  if(jeda&&!saatJeda)return;
+  const t=Date.now(); if(t-terakhir<2500)return; terakhir=t;
+  if(jeda) jenis+=' (saat ujian dijeda)'; else { jeda=true; keluarAt=t; }
+  S.pelanggaran+=1; simpanLokal(); header();
+  post({aksi:'langgar',aid:S.aid,jenis,ke:S.pelanggaran},2);
+  if(S.pelanggaran>=MAKS_LANGGAR){ hapusJeda(); return kirim(`Pelanggaran ke-${MAKS_LANGGAR}`); }
+  tampilJeda(`<h2 style="color:var(--no)">Pelanggaran ${S.pelanggaran}/${MAKS_LANGGAR}</h2><p><b>${esc(jenis)}</b></p>
+   <p>Soal ditutup sementara dan <b>waktu tetap berjalan</b>. Selama layar ini tampil, pindah tab atau aplikasi juga dihitung pelanggaran.</p>
+   ${S.pelanggaran===MAKS_LANGGAR-1?'<div class="msg no">Satu pelanggaran lagi, jawaban terkirim otomatis dan ujian selesai.</div>':''}
+   <button class="btn pri big" id="bLanjut" style="margin-top:12px">Lanjutkan ujian</button><div id="jMsg" class="sm" style="color:var(--no);margin-top:8px"></div>`);
+}
+document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement) langgar('Keluar layar penuh (Esc)'); });
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') langgar('Pindah tab/aplikasi',true); });
+window.addEventListener('blur',()=>{ setTimeout(()=>{ if(!document.hasFocus()) langgar('Pindah jendela/aplikasi',true); },150); });
+document.addEventListener('contextmenu',e=>{ if(layar!=='ujian')return; e.preventDefault(); langgar('Klik kanan'); });
+['copy','cut','paste'].forEach(ev=>document.addEventListener(ev,e=>{ if(layar!=='ujian')return; e.preventDefault(); langgar(ev==='paste'?'Tempel (paste)':'Salin (copy)'); }));
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  const k=(e.key||'').toLowerCase(), mod=e.ctrlKey||e.metaKey;
+  if(k==='f12'){ e.preventDefault(); return langgar('Developer Tools (F12)',true); }
+  if(mod&&e.shiftKey&&['i','j','c'].includes(k)){ e.preventDefault(); return langgar('Developer Tools',true); }
+  if(e.metaKey&&e.altKey&&['i','j','c','u'].includes(k)){ e.preventDefault(); return langgar('Developer Tools',true); }
+  if(mod&&k==='u'){ e.preventDefault(); return langgar('Lihat sumber halaman',true); }
+  if(layar!=='ujian'&&layar!=='lanjut')return;
+  if(mod&&['c','v','x'].includes(k)){ e.preventDefault(); return langgar(k==='v'?'Tempel (Ctrl+V)':'Salin (Ctrl+'+k.toUpperCase()+')'); }
+  if(mod&&['s','p','o','f','g','h','n','t','w','r','a'].includes(k)) e.preventDefault();
+  if(k==='f5'||k==='escape') e.preventDefault();
+},true);
+setInterval(()=>{ if(!pantau||!document.fullscreenElement)return; if(window.outerWidth-window.innerWidth>200||window.outerHeight-window.innerHeight>200) langgar('Developer Tools'); },1000);
+window.addEventListener('beforeunload',e=>{ if(S&&layar==='ujian'&&!selesai){ e.preventDefault(); e.returnValue=''; } });
+
+/* ---------- MULAI ---------- */
+if(API.startsWith('__')){ $('#app').innerHTML='<div class="card narrow"><h2>Alamat server belum diatur</h2></div>'; return; }
+if(S&&S.aid){
+  layar='lanjut'; header();
+  $('#app').innerHTML=`<div class="card narrow" style="text-align:center"><h2>Lanjutkan ujian</h2><p>${esc(S.nama)} · ${esc(S.kelas)}</p><p class="sm mut">Halaman sempat ditutup atau dimuat ulang. Waktu tetap berjalan.</p><button class="btn pri big" id="bLanjutkan">Lanjutkan (layar penuh)</button><div id="lzMsg"></div></div>`;
+  $('#bLanjutkan').onclick=async()=>{ try{ await masukLayarPenuh(); }catch(e){ $('#lzMsg').innerHTML='<div class="msg no">Layar penuh gagal diaktifkan. Tekan tombol lagi.</div>'; return; }
+    if(Date.now()>=S.batas) return kirim('Waktu habis'); viewUjian(); terakhir=0; langgar('Memuat ulang / menutup halaman'); };
+} else viewLogin();
+})();
+</script>
+</body>
+</html>
